@@ -20,7 +20,10 @@ public class PlayerController3 : MonoBehaviour
     [SerializeField] bool isUnderwater;
     [SerializeField] float oxygen = 30;
     private float vSpeed = 0;
-
+    private bool[] runes = { 
+        false, //Ice Rune
+        false //Fire Rune
+    };
     // Start is called before the first frame update
     public void setGravity(float a)
     {
@@ -48,7 +51,7 @@ public class PlayerController3 : MonoBehaviour
         HandleMovement();
         HandleActions();
         HandleOxygen();
-
+        
         Controller.Move(new Vector3(0, vSpeed * Time.deltaTime, 0));
     }
 
@@ -90,6 +93,23 @@ public class PlayerController3 : MonoBehaviour
         if(Input.GetButton("Jump") && isGrounded(Player.transform))
         {
             vSpeed = JumpHeight;
+        }
+        if(Input.GetButton("Fire1") && runes[0])
+        {
+            GameObject iceturret = new GameObject("iceturret");
+            iceturret.AddComponent<iceturretcontroller>();
+            iceturret.transform.position = Player.transform.position;
+        }
+        if(Input.GetButtonDown("Fire2") && runes[1])
+        {
+            GameObject fireball = new GameObject("fireball");
+            fireball.AddComponent<fireballcontroller>();
+            fireball.transform.position = Player.transform.position;
+            fireball.transform.localEulerAngles = new Vector3(
+                MainCamera.transform.localEulerAngles.x,
+                Player.transform.localEulerAngles.y,
+                Player.transform.localEulerAngles.z
+                );
         }
     }
     void HandleGravity()
